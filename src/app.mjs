@@ -3,7 +3,6 @@ import * as dotenv from 'dotenv'
 import express from 'express'
 // import OpenAI from 'openai'
 import { ChatDeepSeek } from '@langchain/deepseek'
-import { ChatPromptTemplate } from '@langchain/core/prompts'
 import {
   START,
   END,
@@ -11,7 +10,7 @@ import {
   StateGraph,
   MemorySaver,
 } from '@langchain/langgraph'
-import { v4 as uuidv4, version } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
 dotenv.config()
 const config = { configurable: { thread_id: uuidv4() }, version: 'v2' }

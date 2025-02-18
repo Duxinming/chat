@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="text" id="input">
+    <button id="btn">Click</button>
+    <div id="div">
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="module">
+        let btn = document.getElementById("btn");
+        btn.addEventListener("click", function () {
+            let input = document.getElementById("input").value;
+            // axios.post('http://localhost:3000/chat', { message: input }).then(res => {
+            //     console.log(res);
+            //     const { messages } = res.data
+            //     const container = document.getElementById("div");
+            //     const i1 = messages.length - 2;
+            //     const i2 = messages.length - 1;
+            //     const arr = [i1, i2];
+            //     for (let i of arr) {
+            //         const { kwargs } = messages[i];
+            //         const [, , type] = messages[i].id
+            //         const { id, content } = kwargs
+            //         const div = document.createElement("div");
+            //         div.key = id;
+            //         div.innerText = `${type}: ${content}`;
+            //         container.appendChild(div);
+            //     }
+
+            // })
+            const newElement = document.createElement("div");
+            newElement.textContent = `你: ${input}`;
+            document.getElementById("div").appendChild(newElement);
+            fetchStream(input).catch(error => console.error("Error fetching stream:", error));
+        })
+
+
+        // const eventSource = new EventSource("http://localhost:3000/chat");
+
+        // eventSource.onmessage = (event) => {
+        //     const data = JSON.parse(event.data);
+        //     console.log("Received message:", data);
+        // };
+
+        // eventSource.onerror = (error) => {
+        //     console.error("EventSource failed:", error);
+        // };
+        async function fetchStream (input) {
+            const response = await fetch("http://localhost:3000/chat", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message: input })
+            });
+
+            if (!response.body) {
+                throw new Error('ReadableStream not supported in this browser.');
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8');
+
+            function appendData (text) {
+                const newElement = document.createElement("span");
+                newElement.textContent = text;
+                document.getElementById("div").appendChild(newElement);
+            }
+            const newElement = document.createElement("span");
+            newElement.textContent = "AI:";
+            document.getElementById("div").appendChild(newElement);
+            while (true) {
+                const { done, value } = await reader.read();
+
+                if (done) {
+                    break;
+                }
+                const text = decoder.decode(value, { stream: true });
+                const reg = /data:\s*(\{.*?\})/g;
+                const match = text.match(reg);
+                for (let i of match) {
+                    const data = JSON.parse(i.replace('data:', '').trim())
+                    const { message } = data;
+                    appendData(message) // 去除多余的空白字符
+                }
+            }
+        }
+
+    </script>
+</body>
+
+
+</html>

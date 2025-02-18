@@ -1,0 +1,15 @@
+{
+	"dependencies": {
+		"@langchain/core": "^0.3.38",
+		"@langchain/deepseek": "^0.0.1",
+		"@langchain/langgraph": "^0.2.44",
+		"@langchain/openai": "^0.4.2",
+		"axios": "^1.7.9",
+		"dotenv": "^16.4.7",
+		"express": "^4.21.2",
+		"langchain": "^0.3.15",
+		"nodemon": "^3.1.9",
+		"openai": "^4.83.0",
+		"uuid": "^11.0.5"
+	}
+}

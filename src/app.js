@@ -1,16 +1,16 @@
 // 一个简单的聊天机器人
-import * as dotenv from 'dotenv'
-import express from 'express'
+const dotenv = require('dotenv')
+const express = require('express')
 // import OpenAI from 'openai'
-import { ChatDeepSeek } from '@langchain/deepseek'
-import {
+const { ChatDeepSeek } = require('@langchain/deepseek')
+const {
   START,
   END,
   MessagesAnnotation,
   StateGraph,
   MemorySaver,
-} from '@langchain/langgraph'
-import { v4 as uuidv4 } from 'uuid'
+} = require('@langchain/langgraph')
+const { v4: uuidv4 } = require('uuid')
 
 dotenv.config()
 const config = { configurable: { thread_id: uuidv4() }, version: 'v2' }

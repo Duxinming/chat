@@ -12,6 +12,6 @@
     "uuid": "^11.0.5"
   },
   "scripts": {
-    "start": "node ./src/app.mjs"
+    "start": "nodemon ./src/app.js"
   }
 }
